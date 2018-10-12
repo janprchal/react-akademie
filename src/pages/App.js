@@ -68,15 +68,16 @@ class App extends Component {
     console.log("Za setState: " + this.state.transactions.length);
   };
 
+  // prevState = () => console.log(this.state.incomeFilter)
   toggleTypeFilter = () => {
     this.setState(
-      prevState => {
-        this.state.incomeFilter = !prevState.incomeFilter;
-      },
+      prevState => ({
+        incomeFilter: !prevState.incomeFilter
+      }),
       () => console.log(this.state.incomeFilter)
     );
 
-    if (this.setState === true) {
+    if (this.state.incomeFilter) {
       this.setState(prevState => ({
         transactions: [
           ...prevState.transactions.filter(function(item) {
