@@ -28,9 +28,11 @@ class App extends Component {
 
   state = {
     transactions: [],
-    incomeFilter: false,
-    expenseFilter: false,
-    all: false
+    incomaTransactions: [],
+    expenseTransactions: [],
+    incomeChecked: false,
+    expenseChecked: false,
+    allChecked: false
   };
 
   // vola se kdyz je komponenta ready
@@ -71,13 +73,14 @@ class App extends Component {
   // prevState = () => console.log(this.state.incomeFilter)
   toggleTypeFilter = () => {
     this.setState(
+      // prevState ma hodnotu jako blok kodu ktery obaluje
+      // a je predan setState jako parametr (setState je proste fce)
       prevState => ({
-        incomeFilter: !prevState.incomeFilter
-      }),
-      () => console.log(this.state.incomeFilter)
+        incomeChecked: !prevState.incomeChecked
+      })
     );
 
-    if (this.state.incomeFilter) {
+    if (this.state.incomeChecked) {
       this.setState(prevState => ({
         transactions: [
           ...prevState.transactions.filter(function(item) {
@@ -86,6 +89,72 @@ class App extends Component {
         ]
       }));
     }
+  };
+
+  handleIncomeFilter = type => {
+    if (type === "income") {
+      this.setState(
+        // prevState ma hodnotu jako blok kodu ktery obaluje
+        // a je predan setState jako parametr (setState je proste fce)
+        prevState => ({
+          incomeChecked: !prevState.incomeChecked,
+          expenseChecked: false,
+          allChecked: false
+        }),
+        () => {
+          this.showOnlyIncome();
+        }
+      );
+    } else if (type === "expense") {
+      this.setState(
+        prevState => ({
+          incomeChecked: false,
+          expenseChecked: !prevState.expenseChecked,
+          allChecked: false
+        }),
+        () => {
+          this.showOnlyExpense();
+        }
+      );
+    } else {
+      this.setState(
+        prevState => ({
+          incomeChecked: false,
+          expenseChecked: false,
+          allChecked: !prevState.expenseChecked
+        }),
+        () => {
+          this.showAll();
+        }
+      );
+    }
+
+    console.log(type);
+  };
+
+  showOnlyIncome = () => {
+    this.setState(prevState => ({
+      transactions: [
+        ...prevState.transactions.filter(function(item) {
+          return item.type.includes("income");
+        })
+      ]
+    }));
+  };
+
+  showOnlyExpense = () => {
+    this.setState(prevState => ({
+      transactions: [
+        ...prevState.transactions.filter(function(item) {
+          return item.type.includes("expense");
+        })
+      ]
+    }));
+  };
+
+  showAll = () => {
+    console.log("Zobraz vsechny");
+    this.setState({ transactions: data });
   };
 
   // map prebira anonymni funkci
@@ -98,8 +167,30 @@ class App extends Component {
       <React.Fragment>
         <Filters />
         <label>
-          Filtruj!
-          <input type="checkbox" onClick={this.toggleTypeFilter} />
+          Income
+          <input
+            type="radio"
+            name="type"
+            onClick={() => this.handleIncomeFilter("income")}
+          />
+        </label>
+
+        <label>
+          Expense
+          <input
+            type="radio"
+            name="type"
+            onClick={() => this.handleIncomeFilter("expense")}
+          />
+        </label>
+
+        <label>
+          All
+          <input
+            type="radio"
+            name="type"
+            onClick={() => this.handleIncomeFilter("all")}
+          />
         </label>
         <Button onClick={this.addTransaction}>+</Button>
         <Records>
