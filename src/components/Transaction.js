@@ -7,7 +7,7 @@ const Record = styled.div`
 
   padding: 1rem 2rem;
 
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e4e4e4;
 
   div {
     flex: 0 0 33.33%;
@@ -20,10 +20,22 @@ const Record = styled.div`
   div:last-child {
     text-align: right;
   }
+
+  &:last-child {
+    border-bottom: 0 none;
+  }
 `;
 
 const Type = styled.div`
   text-align: right;
+
+  &.income {
+    color: green;
+  }
+
+  &.expense {
+    color: red;
+  }
 `;
 
 const Transaction = (
@@ -32,7 +44,7 @@ const Transaction = (
   <Record>
     <div>{name}</div>
     <div>{value}</div>
-    <Type>{type}</Type>
+    <Type className={type}>{type}</Type>
   </Record>
 );
 
